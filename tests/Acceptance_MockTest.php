@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace Tests\BirthdayGreetingsKata;
 
 use BirthdayGreetingsKata\BirthdayService;
-use BirthdayGreetingsKata\BirthdayServiceMocked;
 use BirthdayGreetingsKata\XDate;
-use GuzzleHttp\Client;
 use PHPUnit\Framework\TestCase;
 
 class AcceptanceMockTest extends TestCase

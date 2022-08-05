@@ -1,6 +1,8 @@
 <?php
 
-namespace BirthdayGreetingsKata;
+namespace Tests\BirthdayGreetingsKata;
+
+use BirthdayGreetingsKata\BirthdayService;
 
 class BirthdayServiceMocked extends BirthdayService
 {
