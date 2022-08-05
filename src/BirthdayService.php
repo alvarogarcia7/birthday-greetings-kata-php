@@ -35,13 +35,11 @@ class BirthdayService
 
         $employeeRepository = new EmployeeRepository(new CSVReader($fileName));
 
-        while ($employee = $employeeRepository->nextOrNull()) {
-            if ($employee->isBirthday($xDate)) {
-                $recipient = $employee->getEmail();
-                $body = sprintf('Happy Birthday, dear %s!', $employee->getFirstName());
-                $subject = 'Happy Birthday!';
-                $this->sendMessage($smtpHost, $smtpPort, 'sender@here.com', $subject, $body, $recipient);
-            }
+        while ($employee = $employeeRepository->nextEmployeeWithBirthdayOrNull($xDate)) {
+            $recipient = $employee->getEmail();
+            $body = sprintf('Happy Birthday, dear %s!', $employee->getFirstName());
+            $subject = 'Happy Birthday!';
+            $this->sendMessage($smtpHost, $smtpPort, 'sender@here.com', $subject, $body, $recipient);
         }
     }
 
