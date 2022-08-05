@@ -14,7 +14,7 @@ class CSVReader
     public function nextOrNull(): ?array
     {
         if ($employeeData = fgetcsv($this->fileHandler, null, ',')) {
-            return $employeeData;
+            return array_map('trim', $employeeData);
         }
         return null;
     }
