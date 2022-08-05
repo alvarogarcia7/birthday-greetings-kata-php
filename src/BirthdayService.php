@@ -36,13 +36,7 @@ class BirthdayService
 
         $this->csvReader = new CSVReader($fileName);
 
-        $employees = [];
-
         while ($employeeData = $this->csvReader->nextOrNull()) {
-            $employees[] = $employeeData;
-        }
-
-        foreach ($employees as $employeeData) {
             $employeeData = array_map('trim', $employeeData);
             $employee = new Employee($employeeData[1], $employeeData[0], $employeeData[2], $employeeData[3]);
             if ($employee->isBirthday($xDate)) {
