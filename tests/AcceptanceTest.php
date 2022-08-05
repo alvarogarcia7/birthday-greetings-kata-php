@@ -70,13 +70,13 @@ class AcceptanceTest extends TestCase
         $this->assertCount(2, $messages, 'message not sent?');
 
 
-        $message = $messages[0];
+        $message = $messages[1];
         $this->assertEquals('Happy Birthday, dear John!', $message['Content']['Body']);
         $this->assertEquals('Happy Birthday!', $message['Content']['Headers']['Subject'][0]);
         $this->assertCount(1, $message['Content']['Headers']['To']);
         $this->assertEquals('john.doe@foobar.com', $message['Content']['Headers']['To'][0]);
 
-        $message = $messages[1];
+        $message = $messages[0];
         $this->assertEquals('Happy Birthday, dear John!', $message['Content']['Body']);
         $this->assertEquals('Happy Birthday!', $message['Content']['Headers']['Subject'][0]);
         $this->assertCount(1, $message['Content']['Headers']['To']);
