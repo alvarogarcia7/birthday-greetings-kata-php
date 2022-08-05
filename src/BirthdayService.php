@@ -29,6 +29,7 @@ class BirthdayService
 {
     private Mailer $mailer;
     private CSVReader $csvReader;
+    private EmployeeRepository $employeeRepository;
 
     public function sendGreetings($fileName, XDate $xDate, $smtpHost, $smtpPort): void
     {
@@ -36,8 +37,9 @@ class BirthdayService
 
         $this->csvReader = new CSVReader($fileName);
 
-        while ($employeeData = $this->csvReader->nextOrNull()) {
-            $employee = new Employee($employeeData[1], $employeeData[0], $employeeData[2], $employeeData[3]);
+        $this->employeeRepository = new EmployeeRepository($this->csvReader);
+
+        while ($employee = $this->employeeRepository->nextOrNull()) {
             if ($employee->isBirthday($xDate)) {
                 $recipient = $employee->getEmail();
                 $body = sprintf('Happy Birthday, dear %s!', $employee->getFirstName());
