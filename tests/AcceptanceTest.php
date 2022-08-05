@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Tests\BirthdayGreetingsKata;
 
 use BirthdayGreetingsKata\BirthdayService;
+use BirthdayGreetingsKata\XDate;
 use GuzzleHttp\Client;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Process\Process;
 
 class AcceptanceTest extends TestCase
 {
-    private const SMTP_HOST = '127.0.0.1';
+    private const SMTP_HOST = 'mailhog';
     private const SMTP_PORT = 1025;
 
     /**
@@ -22,23 +23,13 @@ class AcceptanceTest extends TestCase
     /** @before */
     protected function startMailhog(): void
     {
-        $whichDockerCompose = Process::fromShellCommandline('which docker-compose');
-        $whichDockerCompose->run();
-
-        if ('' === $whichDockerCompose->getOutput()) {
-            $this->markTestSkipped('To run this test you should have docker-compose installed.');
-        }
-
-        Process::fromShellCommandline('docker stop $(docker ps -a)')->run();
-        Process::fromShellCommandline('docker-compose up -d')->run();
-
         $this->service = new BirthdayService();
     }
 
     /** @after */
     protected function stopMailhog(): void
     {
-        (new Client())->delete('http://127.0.0.1:8025/api/v1/messages');
+        (new Client())->delete('http://mailhog:8025/api/v1/messages');
         Process::fromShellCommandline('docker-compose stop')->run();
         Process::fromShellCommandline('docker-compose rm -f')->run();
     }
@@ -82,6 +73,6 @@ class AcceptanceTest extends TestCase
 
     private function messagesSent(): array
     {
-        return json_decode(file_get_contents('http://127.0.0.1:8025/api/v1/messages'), true);
+        return json_decode(file_get_contents('http://mailhog:8025/api/v1/messages'), true);
     }
 }
