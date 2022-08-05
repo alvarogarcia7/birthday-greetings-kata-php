@@ -28,16 +28,13 @@ class Mailer
 class BirthdayService
 {
     private Mailer $mailer;
-    private CSVReader $csvReader;
     private EmployeeRepository $employeeRepository;
 
     public function sendGreetings($fileName, XDate $xDate, $smtpHost, $smtpPort): void
     {
         $this->mailer = new Mailer($smtpHost, $smtpPort);
 
-        $this->csvReader = new CSVReader($fileName);
-
-        $this->employeeRepository = new EmployeeRepository($this->csvReader);
+        $this->employeeRepository = new EmployeeRepository(new CSVReader($fileName));
 
         while ($employee = $this->employeeRepository->nextOrNull()) {
             if ($employee->isBirthday($xDate)) {
