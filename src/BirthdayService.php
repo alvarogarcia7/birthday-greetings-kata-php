@@ -28,15 +28,31 @@ class Mailer
 class BirthdayService
 {
     private Mailer $mailer;
+    private CSVReader $csvReader;
 
     public function sendGreetings($fileName, XDate $xDate, $smtpHost, $smtpPort): void
     {
         $this->mailer = new Mailer($smtpHost, $smtpPort);
 
+        $this->csvReader = new CSVReader($fileName);
+
         $fileHandler = fopen($fileName, 'r');
         fgetcsv($fileHandler);
 
+        $oldEmployees = [];
+        $newEmployees = [];
+
         while ($employeeData = fgetcsv($fileHandler, null, ',')) {
+            $oldEmployees[] = $employeeData;
+        }
+
+        while ($employeeData = $this->csvReader->nextOrNull()) {
+            $newEmployees[] = $employeeData;
+        }
+
+        assert($oldEmployees == $newEmployees);
+
+        foreach ($oldEmployees as $employeeData) {
             $employeeData = array_map('trim', $employeeData);
             $employee = new Employee($employeeData[1], $employeeData[0], $employeeData[2], $employeeData[3]);
             if ($employee->isBirthday($xDate)) {
