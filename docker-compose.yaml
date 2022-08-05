@@ -1,6 +1,14 @@
-version: "3.7"
+version: "3.9"
 
 services:
+  php:
+    image: composer:2.3
+    tty: true
+    volumes:
+      - "${PWD}:/app2/"
+    command: bash
+    depends_on:
+      - mailhog
   mailhog:
     image: mailhog/mailhog
     ports:
