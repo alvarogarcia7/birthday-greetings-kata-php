@@ -38,7 +38,7 @@ class AcceptanceTest extends TestCase
     public function willSendGreetings_whenItsSomebodysBirthday(): void
     {
         $this->service->sendGreetings(
-            __DIR__ . '/resources/employee_data.txt',
+            __DIR__ . '/resources/employee_data_case1.txt',
             new XDate('2008/10/08'),
             static::SMTP_HOST,
             static::SMTP_PORT
@@ -57,10 +57,39 @@ class AcceptanceTest extends TestCase
     /**
      * @test
      */
+    public function willSendMultipleGreetings_whenItsSomebodysBirthday(): void
+    {
+        $this->service->sendGreetings(
+            __DIR__ . '/resources/employee_data_case2.txt',
+            new XDate('2008/10/08'),
+            static::SMTP_HOST,
+            static::SMTP_PORT
+        );
+
+        $messages = $this->messagesSent();
+        $this->assertCount(2, $messages, 'message not sent?');
+
+
+        $message = $messages[0];
+        $this->assertEquals('Happy Birthday, dear John!', $message['Content']['Body']);
+        $this->assertEquals('Happy Birthday!', $message['Content']['Headers']['Subject'][0]);
+        $this->assertCount(1, $message['Content']['Headers']['To']);
+        $this->assertEquals('john.doe@foobar.com', $message['Content']['Headers']['To'][0]);
+
+        $message = $messages[1];
+        $this->assertEquals('Happy Birthday, dear John!', $message['Content']['Body']);
+        $this->assertEquals('Happy Birthday!', $message['Content']['Headers']['Subject'][0]);
+        $this->assertCount(1, $message['Content']['Headers']['To']);
+        $this->assertEquals('john.bboy@foobar.com', $message['Content']['Headers']['To'][0]);
+    }
+
+    /**
+     * @test
+     */
     public function willNotSendEmailsWhenNobodysBirthday(): void
     {
         $this->service->sendGreetings(
-            __DIR__ . '/resources/employee_data.txt',
+            __DIR__ . '/resources/employee_data_case2.txt',
             new XDate('2008/01/01'),
             static::SMTP_HOST,
             static::SMTP_PORT

@@ -27,7 +27,7 @@ class AcceptanceMockTest extends TestCase
     public function willSendGreetings_whenItsSomebodysBirthday(): void
     {
         $this->service->sendGreetings(
-            __DIR__ . '/resources/employee_data.txt',
+            __DIR__ . '/resources/employee_data_case1.txt',
             new XDate('2008/10/08'),
             '',
             ''
