@@ -8,10 +8,31 @@ use Swift_Mailer;
 use Swift_Message;
 use Swift_SmtpTransport;
 
+class Mailer
+{
+    private Swift_Mailer $mailer;
+
+    public function __construct($smtpHost, $smtpPort)
+    {
+        $this->mailer = new Swift_Mailer(
+            new Swift_SmtpTransport($smtpHost, $smtpPort)
+        );
+    }
+
+    public function send($message)
+    {
+        $this->mailer->send($message);
+    }
+}
+
 class BirthdayService
 {
+    private Mailer $mailer;
+
     public function sendGreetings($fileName, XDate $xDate, $smtpHost, $smtpPort): void
     {
+        $this->mailer = new Mailer($smtpHost, $smtpPort);
+
         $fileHandler = fopen($fileName, 'r');
         fgetcsv($fileHandler);
 
@@ -29,20 +50,11 @@ class BirthdayService
 
     protected function sendMessage($smtpHost, $smtpPort, $sender, $subject, $body, $recipient): void
     {
-        // Create a mailer
-        $mailer = new Swift_Mailer(
-            new Swift_SmtpTransport($smtpHost, $smtpPort)
-        );
-
-        // Construct the message
         $msg = new Swift_Message($subject);
         $msg
             ->setFrom($sender)
             ->setTo([$recipient])
-            ->setBody($body)
-        ;
-
-        // Send the message
-        $mailer->send($msg);
+            ->setBody($body);
+        $this->mailer->send($msg);
     }
 }
