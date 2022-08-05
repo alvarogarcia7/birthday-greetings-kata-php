@@ -8,7 +8,7 @@ use Swift_Mailer;
 use Swift_Message;
 use Swift_SmtpTransport;
 
-final class BirthdayService
+class BirthdayService
 {
     public function sendGreetings($fileName, XDate $xDate, $smtpHost, $smtpPort): void
     {
@@ -27,7 +27,7 @@ final class BirthdayService
         }
     }
 
-    private function sendMessage($smtpHost, $smtpPort, $sender, $subject, $body, $recipient): void
+    protected function sendMessage($smtpHost, $smtpPort, $sender, $subject, $body, $recipient): void
     {
         // Create a mailer
         $mailer = new Swift_Mailer(
